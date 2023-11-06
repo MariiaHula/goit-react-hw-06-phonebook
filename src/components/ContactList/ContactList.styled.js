@@ -31,3 +31,7 @@ export const Button = styled.button`
     background-color: #a22943;
   }
 `;
+export const TextNote = styled.p`
+  font-weight: 600;
+  font-size: 20px;
+`;

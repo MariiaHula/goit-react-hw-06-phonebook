@@ -1,5 +1,5 @@
 import React from 'react';
-import { PeopleList, Item, Text, Button } from './ContactList.styled';
+import { PeopleList, Item, Text, Button, TextNote } from './ContactList.styled';
 import { useDispatch, useSelector } from 'react-redux';
 import { selectContacts } from 'redux/contacts/selectors';
 import { deleteContact } from 'redux/contacts/contactsSlice';
@@ -41,7 +41,7 @@ const ContactList = () => {
           </Item>
         ))
       ) : (
-        <p>Unfortunately, there is no contact with such names</p>
+        <TextNote>Unfortunately, there are no matches</TextNote>
       )}
     </PeopleList>
   );
