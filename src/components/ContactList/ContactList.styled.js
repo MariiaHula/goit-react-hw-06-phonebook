@@ -31,7 +31,11 @@ export const Button = styled.button`
     background-color: #a22943;
   }
 `;
+
 export const TextNote = styled.p`
+  color: navy;
   font-weight: 600;
   font-size: 20px;
+  text-align: center;
+  text-shadow: #fc0 1px 0 10px;
 `;
