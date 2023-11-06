@@ -1,65 +1,43 @@
-import React, { useState } from 'react';
-import PropTypes from 'prop-types';
+import React from 'react';
 import { Form, Label, Input, Button } from './ContactForm.styled';
+import { useForm } from 'react-hook-form';
+import { useDispatch, useSelector } from 'react-redux';
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import { selectContacts } from 'redux/contacts/selectors';
+import { addContact } from 'redux/contacts/contactsSlice';
 
-const ContactForm = ({ addContact }) => {
-  const [name, setName] = useState('');
-  const [number, setNumber] = useState('');
+const ContactForm = () => {
+  const contacts = useSelector(selectContacts);
+  const dispatch = useDispatch();
 
-  const handleChangeInput = e => {
-    const { name, value } = e.target;
+  const { register, handleSubmit, reset } = useForm();
 
-    switch (name) {
-      case 'name':
-        setName(value);
-        break;
-      case 'number':
-        setNumber(value);
-        break;
-      default:
-        return;
-    }
-  };
+  const submit = data => {
+    const nameExists = contacts.find(
+      contact =>
+        contact.name.toLowerCase().trim() === data.name.toLowerCase().trim()
+    );
 
-  const handleAddNewContactOnSubmit = e => {
-    e.preventDefault();
-
-    if (
-      e.target.name.value.trim() === '' ||
-      e.target.number.value.trim() === ''
-    ) {
+    if (nameExists) {
+      toast.info(`${data.name} is already in your contacts.`);
       return;
+    } else {
+      toast.success(`${data.name} added to your phonebook.`);
+      dispatch(addContact(data));
+      reset();
     }
-
-    addContact({ name, number });
-    reset();
   };
 
-  const reset = () => {
-    setName('');
-    setNumber('');
-  };
   return (
-    <Form onSubmit={handleAddNewContactOnSubmit}>
+    <Form onSubmit={handleSubmit(submit)}>
       <Label>
         Name
-        <Input
-          type="text"
-          name="name"
-          value={name}
-          required
-          onChange={handleChangeInput}
-        />
+        <Input {...register('name')} type="text" />
       </Label>
       <Label>
         Number
-        <Input
-          type="tel"
-          name="number"
-          value={number}
-          required
-          onChange={handleChangeInput}
-        />
+        <Input {...register('number')} type="tel" />
       </Label>
       <Button type="submit">Add Contact</Button>
     </Form>
@@ -67,7 +45,3 @@ const ContactForm = ({ addContact }) => {
 };
 
 export default ContactForm;
-
-ContactForm.propTypes = {
-  addContact: PropTypes.func.isRequired,
-};

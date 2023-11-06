@@ -1,72 +1,24 @@
-import React, { useEffect, useState } from 'react';
-import { nanoid } from 'nanoid';
+import React from 'react';
 import ContactForm from '../ContactForm/ContactForm';
 import Filter from '../Filter/Filter';
 import ContactList from '../ContactList/ContactList';
 import Notification from '../Notification/Notification';
 import { Wrapper } from './App.styled';
-import { toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+import { selectContacts } from 'redux/contacts/selectors';
+import { useSelector } from 'react-redux';
 
 export const App = () => {
-  const [contacts, setContacts] = useState(
-    () => JSON.parse(window.localStorage.getItem('contacts')) ?? []
-  );
-
-  const [filter, setFilter] = useState('');
-  const [prevContacts, setPrevContacts] = useState([]);
-
-  useEffect(() => {
-    if (prevContacts !== contacts) {
-      window.localStorage.setItem('contacts', JSON.stringify(contacts));
-    }
-  }, [prevContacts, contacts]);
-
-  const handleChangeFilter = e => {
-    setFilter(e.target.value);
-  };
-
-  const handleAddContact = contactData => {
-    const nameExists = contacts.find(
-      contact =>
-        contact.name.toLowerCase().trim() ===
-        contactData.name.toLowerCase().trim()
-    );
-
-    if (nameExists) {
-      toast.info(`${contactData.name} is already in your contacts.`);
-      return;
-    } else {
-      const newContact = { id: nanoid(), ...contactData };
-      setContacts(prev => [newContact, ...prev]);
-      setPrevContacts(contacts);
-    }
-  };
-
-  const handleContactFilter = () => {
-    return contacts.filter(
-      contact =>
-        contact.name.toLowerCase().includes(filter.toLowerCase()) ||
-        contact.number.includes(filter)
-    );
-  };
-
-  const handleDeleteContact = id => {
-    setContacts(prev => prev.filter(contact => contact.id !== id));
-  };
+  const contacts = useSelector(selectContacts);
 
   return (
     <>
       <Wrapper>
         <h1>Phonebook</h1>
-        <ContactForm addContact={handleAddContact} />
+        <ContactForm />
         <h2>Contacts List</h2>
-        <Filter filteredContacts={handleChangeFilter} />
+        <Filter />
         {contacts.length ? (
-          <ContactList
-            list={handleContactFilter()}
-            onDeleteContact={handleDeleteContact}
-          />
+          <ContactList />
         ) : (
           <Notification message="Your contact list is empty" />
         )}
