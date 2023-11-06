@@ -1,10 +1,10 @@
 import { createSlice, nanoid } from '@reduxjs/toolkit';
 
-const prepareAdd = contactData => {
+const prepareAdd = ({ name, number }) => {
   return {
     payload: {
-      name: contactData.name,
-      number: contactData.number,
+      name,
+      number,
       id: nanoid(),
     },
   };

@@ -23,8 +23,9 @@ const ContactForm = () => {
       toast.info(`${data.name} is already in your contacts.`);
       return;
     } else {
-      toast.success(`${data.name} added to your phonebook.`);
-      dispatch(addContact(data));
+      const { name, number } = data;
+      toast.success(`${name} added to your phonebook.`);
+      dispatch(addContact({ name, number }));
       reset();
     }
   };
@@ -33,11 +34,11 @@ const ContactForm = () => {
     <Form onSubmit={handleSubmit(submit)}>
       <Label>
         Name
-        <Input {...register('name')} type="text" />
+        <Input {...register('name', { required: true })} type="text" />
       </Label>
       <Label>
         Number
-        <Input {...register('number')} type="tel" />
+        <Input {...register('number', { required: true })} type="tel" />
       </Label>
       <Button type="submit">Add Contact</Button>
     </Form>
